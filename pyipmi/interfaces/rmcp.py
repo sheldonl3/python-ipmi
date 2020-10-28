@@ -20,7 +20,8 @@ import hashlib
 import random
 import threading
 from array import array
-from queue import Queue
+#from queue import Queue
+from multiprocessing import Queue
 
 from .. import Target
 from ..session import Session
