@@ -1,6 +1,6 @@
 # encoding: utf-8
 from socket import *
-import openssion
+import command.openssion as openssion
 
 class TTP():
     def __init__(self,bmc_ip):
