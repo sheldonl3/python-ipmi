@@ -1,9 +1,7 @@
 # encoding: utf-8
-from socket import *
-import time
 from ctypes import *
 
-class SSHead(BigEndianStructure):
+class Openssion_Req(BigEndianStructure):
     _pack_ = 1
     _fields_ = [
         #(字段名, c类型 )
@@ -19,23 +17,18 @@ class SSHead(BigEndianStructure):
         memmove(addressof(self), data, sizeof(self))
         return len(data)
 
-
-udp_socket = socket(AF_INET, SOCK_DGRAM)
-
-dest_addr = ('127.0.0.1', 12346)
-#udp_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-udp_socket.bind(dest_addr)
-while True:
+def openssion(udp_socket):
     recv_data,addr = udp_socket.recvfrom(1024)  # 1024表示本次接收的最大字节数
     print("from:",addr)
-    #print(recv_data)
-
-    ss = SSHead()
+    ss = Openssion_Req()
     ss.decode(recv_data)
     print(ss.step,ss.remoteConsoleSessionID,ss.managedSystemSessionID)
-
+    if ss.step!=1:
+        print("openssion error")
+        return
     send_data = "nihao"
     udp_socket.sendto(send_data.encode(),addr)
+    #udp_socket.close()
 
-udp_socket.close()
-print("quit")
+    print("openssion done\n")
+    return ss.remoteConsoleSessionID,ss.managedSystemSessionID
