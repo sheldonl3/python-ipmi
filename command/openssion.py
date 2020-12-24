@@ -1,7 +1,7 @@
 # encoding: utf-8
 from ctypes import *
 import struct,random
-from others import session
+from others import Session
 
 class Openssion_Req():
     def __init__(self):
@@ -25,7 +25,8 @@ def get_rand_num():
     return random.randint(1000,99999)
 
 def openssion(udp_socket):
-    recv_data,addr = udp_socket.recvfrom(1024)  # 1024表示本次接收的最大字节数
+    session=Session()                           #创建session实例
+    recv_data,addr = udp_socket.recvfrom(1024)  #1024表示本次接收的最大字节数
     print("from:",addr)
     ss = Openssion_Req()
     recdata = struct.unpack(ss.typeStr,recv_data)#接受bmc请求
@@ -33,9 +34,9 @@ def openssion(udp_socket):
     if recdata[0]!=1:                             #查看是否为opensession请求
         print("openssion error:wrong steps")
         return
-    session.conselonid=recdata[2]
-    session.bmcid=recdata[3]
-    session.cipherid=recdata[1]
+    session.conselon_id=recdata[2]
+    session.bmc_id=recdata[3]
+    session.cipher_id=recdata[1]
 
     cert='''-----BEGIN CERTIFICATE-----
 MIIDcDCCAlgCFH8S17vfBLItM6WooqTnv4iULIoAMA0GCSqGSIb3DQEBCwUAMHQx
@@ -58,10 +59,10 @@ T9tRaGn8ebuqiXHxi7aCJGlMFiBFS3eVE1ZcRb5dLZMn0p8c4HqN2cW6SjjVP+dO
 4XRBLKghByQm3APNgSkg05B9Ukl7Mj0abkA/M7e8zLy8xKnuvkqmARzrExj18UIp
 kW0PLLZPEGzMhdxzJnsujdN74g0=
 -----END CERTIFICATE-----'''
-    rand_num1=get_rand_num()
-    rand_num2=get_rand_num()
-    print(rand_num1,rand_num2)
-    send_struct = Openssion_Res(1,0,rand_num1,rand_num2,len(cert),cert)
+    session.rand_console=get_rand_num()
+    session.rand_bmc=get_rand_num()
+    print(session.rand_console,session.rand_bmc)
+    send_struct = Openssion_Res(1,0,session.rand_console,session.rand_bmc,len(cert),cert)
 
     send_data=struct.pack(
         send_struct.typeStr,

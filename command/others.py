@@ -4,8 +4,12 @@ class ConnectError(RuntimeError):
 
 class Session():
     def __init__(self):
-        self.conselonid = 0
-        self.bmcid=0
-        self.cipherid=0
-
-session=Session()
+        self.conselon_id = 0
+        self.bmc_id=0
+        self.cipher_id=0
+        self.rand_bmc=0
+        self.rand_console=0
+        self.sct_bmc=0
+        self.sct_console=0
+        self.k_bmc=''
+        self.k_console=''
